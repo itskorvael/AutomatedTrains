@@ -1,0 +1,39 @@
+# AutomatedTrains configuration.
+# Changes take effect on the next server start / plugin reload.
+
+# How fast automated trains travel, in blocks per game tick (20 ticks = 1 second).
+# Vanilla minecart top speed is roughly 0.4 blocks/tick, so that's the ceiling this
+# should sensibly go up to. Lower this if trains feel too fast.
+#   0.4  -> 8.0 blocks/sec (original default, quite fast)
+#   0.2  -> 4.0 blocks/sec (gentle, easy to watch go by)
+#   0.1  -> 2.0 blocks/sec (slow/scenic)
+speed: 0.2
+
+# Distance, in blocks, kept between the center of each coupled cart.
+spacing: 1.5
+
+# How long an automated train sits at a "[Station]" sign before moving off again.
+station-wait-seconds: 10
+
+# A running train stops when another train that has stopped (waiting at a station, not started yet,
+# or itself held up) is this many blocks or fewer ahead of it on the same track, measured along the
+# rails. It moves off again as soon as the way is clear. Set to 0 to turn this off.
+train-stop-distance: 10
+
+# Junctions with a "[Route]" sign let one train through at a time. A train that has held a junction
+# for longer than this without clearing it (for example it got stuck) releases it for the others.
+junction-lock-timeout-seconds: 30
+
+# Optional radio announcements (needs the RadioNetwork plugin; otherwise this does nothing).
+# On a "[Station]" sign, line 3 is the station name and line 4 is the radio channel, which is also
+# the line name: a sign with "Port" on line 3 and "Northern Line" on line 4 announces
+# "Train arriving at Port." on the "Northern Line" channel. A sign with no line 4 stays
+# silent. Announcements are free and carried by the nearest powered radio on that channel
+# (see RadioNetwork's announcements.search-radius).
+# Placeholders: {line} (line 4), {station} (line 3), {destination} (the train's destination).
+announcements:
+  enabled: true
+  arrival: "Train arriving at {station} for {destination}."
+  arrival-no-destination: "Train arriving at {station}."
+  departure: "Train departing {station} for {destination}."
+  departure-no-destination: "Train departing {station}."

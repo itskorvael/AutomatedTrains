@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.automatedtrains</groupId>
+    <artifactId>AutomatedTrains</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <!--
+        Two supported build targets, selected by Maven profile:
+
+          mvn clean package                  ->  Paper 26.2 (current stable line), Java 25.
+                                                   Produces target/AutomatedTrains-1.0.0.jar
+          mvn clean package -Plegacy-1.21    ->  Paper 1.21.11 (legacy line, final release),
+                                                   Java 21. Produces
+                                                   target/AutomatedTrains-1.0.0-1.21.11.jar
+
+        Both were built and live-tested clean against a real Paper server of each version -
+        no source changes are needed between them, only these build settings. Paper's own
+        api-version gate rejects a plugin.yml declaring the wrong line's api-version, so that
+        field is filled in from ${plugin.api.version} at build time (see <resources> below)
+        rather than hardcoded.
+    -->
+    <properties>
+        <maven.compiler.source>${maven.compiler.release}</maven.compiler.source>
+        <maven.compiler.target>${maven.compiler.release}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Default target: Paper 26.2, current stable line. Paper 26.x ships class files
+             built for Java 25 (class file version 69), so this default build must use a
+             JDK 25 (or newer) toolchain - a JDK 21 toolchain cannot even read paper-api's
+             classes, let alone compile against them. -->
+        <paper.api.version>26.2.build.121-stable</paper.api.version>
+        <plugin.api.version>26.2</plugin.api.version>
+        <maven.compiler.release>25</maven.compiler.release>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>papermc</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>${paper.api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+        <defaultGoal>clean package</defaultGoal>
+        <resources>
+            <!-- Filtering is on so plugin.yml's api-version placeholder gets substituted
+                 per build target; nothing else in resources currently uses ${...} tokens. -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>${maven.compiler.release}</release>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <!-- Legacy target: Paper 1.21.11, the final release on the pre-26.x version line
+                 (confirmed via a live server: it reports itself as "4 release(s) behind the
+                 latest stable release (26.2)" - this is genuinely an older line, not a
+                 relabeling). Runs on Java 21; compiled here by cross-targeting from the same
+                 JDK 25 toolchain via the release flag below, so no second JDK install is
+                 required. -->
+            <id>legacy-1.21</id>
+            <properties>
+                <paper.api.version>1.21.11-R0.1-SNAPSHOT</paper.api.version>
+                <plugin.api.version>1.21</plugin.api.version>
+                <maven.compiler.release>21</maven.compiler.release>
+            </properties>
+            <build>
+                <finalName>${project.artifactId}-${project.version}-1.21.11</finalName>
+            </build>
+        </profile>
+    </profiles>
+</project>

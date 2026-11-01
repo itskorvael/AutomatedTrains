@@ -1,0 +1,25 @@
+name: AutomatedTrains
+version: '1.0.0'
+main: com.automatedtrains.AutomatedTrains
+api-version: '${plugin.api.version}'
+author: AutomatedTrains
+softdepend:
+  - RadioNetwork
+description: Couple minecarts into fully automated, sign-routed trains with cosmetic attachments.
+
+commands:
+  train:
+    description: Manage AutomatedTrains trains.
+    usage: /train <info|setdest|trust|untrust|clear|move|stop>
+    permission: automatedtrains.use
+
+permissions:
+  automatedtrains.use:
+    description: Allows use of the /train command.
+    default: true
+  automatedtrains.couple:
+    description: Allows coupling minecarts into trains with a chain.
+    default: true
+  automatedtrains.admin:
+    description: Full override access to modify, trust, or delete any train.
+    default: op
