@@ -19,16 +19,29 @@ keep clear of each other. The carts stay plain vanilla `Minecart` entities.
 
 ## Requirements
 
-| | Default build | Legacy build |
+| Server | Java | `api-version` |
 |---|---|---|
-| Server | Paper **26.2** | Paper **1.21.11** |
-| Java | **25** | **21** |
-| `api-version` | `26.2` | `1.21` |
+| Paper **26.3** | **25** | `26.3` |
+| Paper **26.2** (default build) | **25** | `26.2` |
+| Paper **26.1.2** | **25** | `26.1` |
+| Paper **1.21.11** (legacy) | **21** | `1.21` |
 
 Maven is used for building. Paper 26.x class files need a JDK 25 toolchain, even for the
 legacy build, which cross-targets Java 21.
 
+### Dependencies
+
+None are required. Paper is the only thing the plugin needs, and it bundles no other libraries.
+[RadioNetwork](../RadioNetwork) is an optional soft dependency. With it installed, stations can
+announce arrivals and departures over a radio channel.
+
 ## Building
+
+Paper 26.3:
+
+```bash
+mvn clean package -Dpaper.api.version=26.3.build.236-stable -Dplugin.api.version=26.3
+```
 
 Paper 26.2 (default):
 
